@@ -1,11 +1,10 @@
 package helderklemp.service;
 
-import helderklemp.service.EmployeeService;
 import helderklemp.service.model.Employee;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by helderklemp on 16/7/17.
@@ -20,7 +19,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Collection<Employee> findEmployeeByManager(Long managerId) {
-        return employees;
+        if(managerId ==null){
+            return employees.stream().filter(emp -> emp.getManager() ==null).collect(Collectors.toSet());
+        }else{
+            return employees.stream().filter(emp ->
+                    (emp.getManager()!=null && emp.getManager().getId().equals(managerId))).collect(Collectors.toSet());
+        }
     }
 
     @Override
