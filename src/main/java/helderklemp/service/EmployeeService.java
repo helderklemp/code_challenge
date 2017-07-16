@@ -13,5 +13,4 @@ public interface EmployeeService {
 
     void addEmployee(Employee emp);
 
-    String employeeReport();
 }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private Collection<Employee> employees;
-    private final String DEFAULT_IDENT="      ";
+
 
     public EmployeeServiceImpl(){
         employees=new LinkedHashSet<>();
@@ -70,30 +70,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return (!emp.equals(currentCEO));
     }
 
-    @Override
-    public String employeeReport() {
-        StringBuffer report=new StringBuffer("List of Company's Employees, the data below is represented in hierarchical format :\n");
-        report.append(processEmployeeRow(this.findEmployeeByManager(null),0));
-        return report.toString();
-    }
 
-    private String processEmployeeRow(Collection<Employee> employees,int depth) {
-        StringBuilder row=new StringBuilder("");
-        for (Employee emp :employees) {
-            row.append(printSpacesByDepth(depth));
-            row.append(emp);
-            row.append("\n");
-            row.append(processEmployeeRow(this.findEmployeeByManager(emp.getId()),depth+1));
-        }
-        return row.toString();
-    }
-
-    private String printSpacesByDepth(int depth) {
-        StringBuilder result=new StringBuilder("");
-        for (int i = 0; i < depth; i++) {
-            result.append(DEFAULT_IDENT);
-        }
-        return result.toString();
-    }
 
 }
