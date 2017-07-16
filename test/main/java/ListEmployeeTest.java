@@ -1,8 +1,9 @@
 import helderklemp.service.EmployeeService;
 import helderklemp.service.EmployeeServiceImpl;
-import helderklemp.service.model.Employee;
+import helderklemp.model.Employee;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -19,7 +20,7 @@ public class ListEmployeeTest {
     }
 
     @Test
-    public void testListCeo(){
+    public void ListCeoTest(){
         Assert.assertNotNull("not Null result",service.findEmployeeByManager(null));
         loadData();
         Collection<Employee> result =service.findEmployeeByManager(null);
@@ -28,14 +29,51 @@ public class ListEmployeeTest {
         Assert.assertEquals("Retrieve the CEO",ceo.getName(),"Jamie");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidCEOTest() throws Exception {
+        loadData();
+        Employee ceo2 = new Employee();
+        ceo2.setId(750l);
+        ceo2.setName("Another CEO");
+        service.addEmployee(ceo2);
+        Assert.fail();
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidEmployeeTest() throws Exception {
+        Employee incorrectEmp = new Employee();
+        incorrectEmp.setId(null);
+        incorrectEmp.setName(null);
+        service.addEmployee(incorrectEmp);
+        Assert.fail();
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidManagerTest() throws Exception {
+        loadData();
+        Employee invalidManager = new Employee();
+        invalidManager.setId(750l);
+        invalidManager.setName("invalid Manager");
+        Employee invalidEmployee = new Employee();
+        invalidEmployee.setId(1l);
+        invalidEmployee.setName("Invalid record");
+        invalidEmployee.setManager(invalidManager);
+        service.addEmployee(invalidEmployee);
+        Assert.fail();
+    }
     @Test
-    public void testSimpleHierarchy() throws Exception {
+    public void simpleHierarchyTest() throws Exception {
         loadData();
         Assert.assertEquals("Second Level Hierarchy, CEO direct employees",service.findEmployeeByManager(150l).size(),2);
-
         Assert.assertEquals("Third Level Hierarchy ",service.findEmployeeByManager(100l).size(),2);
         Assert.assertEquals("Third Level Hierarchy ",service.findEmployeeByManager(400l).size(),1);
     }
+    @Test
+    public void testReport() throws Exception {
+        loadData();
+        String report =service.employeeReport();
+        System.out.println(report);
+        Assert.assertNotNull(report);
+    }
+
 
     private void loadData() {
         Employee ceo = new Employee();
@@ -47,6 +85,7 @@ public class ListEmployeeTest {
         alan.setName("Alan");
         alan.setManager(ceo);
         service.addEmployee(alan);
+
         Employee steve = new Employee();
         steve.setId(400l);
         steve.setName("Steve");
@@ -67,7 +106,7 @@ public class ListEmployeeTest {
 
         Employee david = new Employee();
         david.setId(190l);
-        david.setName("Steve");
+        david.setName("David");
         david.setManager(steve);
         service.addEmployee(david);
     }

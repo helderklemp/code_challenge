@@ -1,4 +1,4 @@
-package helderklemp.service.model;
+package helderklemp.model;
 
 /**
  * Created by helderklemp on 16/7/17.
@@ -49,5 +49,10 @@ public class Employee {
         int result = id.hashCode();
         result = 31 * result + name.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
